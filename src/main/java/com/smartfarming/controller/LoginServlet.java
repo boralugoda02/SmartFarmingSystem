@@ -27,7 +27,8 @@ public class LoginServlet extends HttpServlet {
 
 
             if ("Admin".equalsIgnoreCase(user.getRole())) {
-                response.sendRedirect("admin/dashboard.jsp");
+
+                response.sendRedirect("admin-dashboard");
             } else if ("Farmer".equalsIgnoreCase(user.getRole())) {
                 response.sendRedirect("farmer/dashboard.jsp");
             } else {

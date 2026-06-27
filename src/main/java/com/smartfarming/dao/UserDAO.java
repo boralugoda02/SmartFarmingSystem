@@ -9,41 +9,21 @@ import java.sql.SQLException;
 
 public class UserDAO {
 
-    // STEP 5: Register User Method (INSERT)
-    public boolean registerUser(User user) {
-        String query = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getPassword());
-            stmt.setString(4, user.getRole());
-
-            int rowsInserted = stmt.executeUpdate();
-            return rowsInserted > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // STEP 6: Login Method (SELECT)
     public User login(String email, String password) {
         String query = "SELECT * FROM users WHERE email = ? AND password = ?";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+             PreparedStatement ps = conn.prepareStatement(query)) {
 
-            stmt.setString(1, email);
-            stmt.setString(2, password);
+            ps.setString(1, email);
+            ps.setString(2, password);
 
-            try (ResultSet rs = stmt.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     User user = new User();
-                    user.setUserId(rs.getInt("id"));
+                    // 🌟 ඩේටාබේස් එකට ගැලපෙන්න 'user_id' ලෙස සකසා ඇත.
+                    user.setId(rs.getInt("user_id"));
                     user.setName(rs.getString("name"));
                     user.setEmail(rs.getString("email"));
                     user.setPassword(rs.getString("password"));
@@ -55,5 +35,27 @@ public class UserDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public boolean register(User user) {
+        String query = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
+
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.setString(4, user.getRole());
+
+            int result = ps.executeUpdate();
+            return result > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
