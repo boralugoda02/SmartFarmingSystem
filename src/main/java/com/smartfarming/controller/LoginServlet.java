@@ -21,13 +21,11 @@ public class LoginServlet extends HttpServlet {
         User user = userService.login(email, password);
 
         if (user != null) {
-
             HttpSession session = request.getSession();
+
             session.setAttribute("loggedUser", user);
 
-
             if ("Admin".equalsIgnoreCase(user.getRole())) {
-
                 response.sendRedirect("admin-dashboard");
             } else if ("Farmer".equalsIgnoreCase(user.getRole())) {
                 response.sendRedirect("farmer/dashboard.jsp");
